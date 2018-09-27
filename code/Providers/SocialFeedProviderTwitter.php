@@ -14,6 +14,10 @@ class SocialFeedProviderTwitter extends SocialFeedProvider implements SocialFeed
 		'ShowReTweetedImages' => 'Boolean',
 	);
 
+	private static $has_one = array(
+		'DefaultImage' => 'Image'
+	);
+
 	private static $field_labels = array (
 		'TweetModeExtended' => 'Extended mode (use if images are not showing)',
 		'ShowReTweetedImages' => 'Show images in re-tweets'
@@ -29,6 +33,8 @@ class SocialFeedProviderTwitter extends SocialFeedProvider implements SocialFeed
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab('Root.Main', new LiteralField('sf_html_1', '<h4>To get the necessary Twitter API credentials you\'ll need to create a <a href="https://apps.twitter.com" target="_blank">Twitter App.</a></h4>'), 'Label');
 		$fields->addFieldsToTab('Root.Main', new LiteralField('sf_html_2', '<p>You can manually grant permissions to the Twitter App, this will give you an Access Token and Access Token Secret.</h5><p>&nbsp;</p>'), 'Label');
+		$fields->addFieldsToTab('Root.Main', $uploadField = new UploadField($name = 'DefaultImage', $title = 'Default image to use if there is non in tweet' ));
+		$uploadField->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 		return $fields;
 	}
 
@@ -128,6 +134,11 @@ class SocialFeedProviderTwitter extends SocialFeedProvider implements SocialFeed
 			return $post->entities->media[0]->media_url_https;
 		} elseif($this->ShowReTweetedImages && isset($post->retweeted_status) && property_exists($post->retweeted_status, 'entities')&& property_exists($post->retweeted_status->entities, 'media') && $post->retweeted_status->entities->media[0]->media_url_https) {
 			return $post->retweeted_status->entities->media[0]->media_url_https;
+		} elseif(isset($this->DefaultImageID)){
+			$file = File::get_by_id('File', $this->DefaultImageID);
+			if($file && $file->exists()) {
+				return '/' . $file->Filename;
+			}
 		}
 	}
 }
