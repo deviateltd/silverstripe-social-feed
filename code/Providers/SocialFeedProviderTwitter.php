@@ -33,7 +33,7 @@ class SocialFeedProviderTwitter extends SocialFeedProvider implements SocialFeed
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab('Root.Main', new LiteralField('sf_html_1', '<h4>To get the necessary Twitter API credentials you\'ll need to create a <a href="https://apps.twitter.com" target="_blank">Twitter App.</a></h4>'), 'Label');
 		$fields->addFieldsToTab('Root.Main', new LiteralField('sf_html_2', '<p>You can manually grant permissions to the Twitter App, this will give you an Access Token and Access Token Secret.</h5><p>&nbsp;</p>'), 'Label');
-		$fields->addFieldsToTab('Root.Main', $uploadField = new UploadField($name = 'DefaultImage', $title = 'Default image to use if there is non in tweet' ));
+		$fields->addFieldsToTab('Root.Main', $uploadField = new UploadField($name = 'DefaultImage', $title = 'Default image to use if there is none in tweet' ));
 		$uploadField->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 		return $fields;
 	}
